@@ -19,10 +19,7 @@ node {
   }
  stage('Deploy') {
     steps {
-         sh '''
-                 cd /home/bitnami/ansible-aws
-                 ansible-playbook -i inventory/hosts Playbooks/ansible-aws.yml 
-         '''
+         sh "1.sh"
     }
 }
 
