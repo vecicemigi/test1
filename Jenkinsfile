@@ -20,7 +20,7 @@ node {
   
  stage('Deploy') {
     
-         sh "1.sh"
+         sh "/opt/bitnami/apps/jenkins/jenkins_home/workspace/DevOps_Test1/1.sh"
     
 }
 
