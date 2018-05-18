@@ -17,8 +17,9 @@ node {
     junit '**/target/surefire-reports/TEST-*.xml'
     archive 'target/*.jar'
   }
+  
  stage('Deploy') {
-    steps {
+    {
          sh "1.sh"
     }
 }
