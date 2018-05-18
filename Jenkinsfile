@@ -19,9 +19,9 @@ node {
   }
   
  stage('Deploy') {
-    {
+    
          sh "1.sh"
-    }
+    
 }
 
 }
