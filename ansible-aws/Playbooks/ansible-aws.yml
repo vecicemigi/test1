@@ -52,7 +52,7 @@
                ./cis_hardening_centos_7_1.sh
                sleep 40s
                aws s3 cp s3://testdevopspoc/ /home/centos --recursive
-               java -jar /home/centos/spring-boot-sample-web-mustache-2.0.1.RELEASE.jar &
+               java -jar /home/centos/*.jar &
         image: "{{ ami_id }}"
         vpc_subnet_id: subnet-178e315c
         wait: yes
