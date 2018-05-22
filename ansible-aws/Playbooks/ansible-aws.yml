@@ -5,7 +5,7 @@
     connection: local
     gather_facts: False
     vars_files:
-     - /home/bitnami/ansible-aws/group_vars/all.yml
+     - /opt/bitnami/apps/jenkins/jenkins_home/workspace/DevOps_Test1/ansible-aws/group_vars/all.yml
     tasks:
     - name: Create a security group
       ec2_group:
@@ -52,7 +52,7 @@
                ./cis_hardening_centos_7_1.sh
                sleep 40s
                aws s3 cp s3://testdevopspoc/ /home/centos --recursive
-               java -jar /home/centos/spring-boot-sample-web-mustache-2.0.1.RELEASE.jar &
+               java -jar /home/centos/*.jar &
         image: "{{ ami_id }}"
         vpc_subnet_id: subnet-178e315c
         wait: yes
