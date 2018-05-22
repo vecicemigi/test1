@@ -1,0 +1,58 @@
+---
+  # Basic provisioning example
+  - name: Create AWS resources
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    vars_files:
+     - /home/bitnami/ansible-aws/group_vars/all.yml
+    tasks:
+    - name: Create a security group
+      ec2_group:
+        name: ansible
+        description: "Ansible Security Group"
+        region: "{{ aws_region }}"
+        vpc_id: "{{ vpc_id }}"
+        rules:
+          - proto: all
+            cidr_ip: "{{ my_local_cidr_ip }}"
+          - proto: all
+            group_name: ansible
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+      register: firewall
+    - name: Create an EC2 instance
+      ec2:
+        key_name: "{{ key_name }}"
+        region: "{{ aws_region }}"
+        group: ansible
+        assign_public_ip: yes
+        instance_tags:
+          Name: Devops_Test
+        instance_profile_name: S3-Admin-Access
+        instance_type: "{{ instance_type }}"
+        user_data: |
+               #!/bin/bash
+               yum update -y
+               yum install -y epel-release
+               yum install -y python-pip
+               pip install awscli
+               pip install --upgrade pip
+               yum install wget unzip java dos2unix -y
+               cd /home/centos/
+               wget https://s3.us-east-2.amazonaws.com/alchemy-os-hardening-script/CIS_hardening_for_Centos_7.zip
+               unzip CIS_hardening_for_Centos_7.zip
+               chmod -R +x *
+               cd /home/centos/CIS_hardening_for_Centos_7/CIS_hardening_for_Centos_7/
+               dos2unix *
+               cd sections
+               dos2unix *
+               cd ..
+               ./cis_hardening_centos_7_1.sh
+               sleep 40s
+               aws s3 cp s3://testdevopspoc/ /home/centos --recursive
+               java -jar /home/centos/spring-boot-sample-web-mustache-2.0.1.RELEASE.jar &
+        image: "{{ ami_id }}"
+        vpc_subnet_id: subnet-178e315c
+        wait: yes
